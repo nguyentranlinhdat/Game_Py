@@ -54,44 +54,51 @@ class Player(Entity):
     def import_player_assets(self):
         character_path = '../Chevalier/graphics/player/'
         self.animations = {'up': [],'down': [],'left': [],'right': [],
-          'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
-          'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
+            'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
+            'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
 
         for animation in self.animations.keys():
-          full_path = character_path + animation
-          self.animations[animation] = import_folder(full_path)
+            full_path = character_path + animation
+            self.animations[animation] = import_folder(full_path)
 
     def input(self):
+        """
+        WSAD để di chuyển
+        Q để chuyển đổi vũ khí
+        E để chuyển đổi phép
+        J để tấn công bằng vũ khí
+        K để dùng phép
+        """
         #tránh người chơi đổi hướng trong thời gian tung chiêu
         if not self.attacking:
             # Thiết lập các nút di chuyển
             keys = pygame.key.get_pressed()
             # lên, xuống    
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_w]:
                 self.direction.y = -1
                 self.status = "up"
-            elif keys[pygame.K_DOWN]:
+            elif keys[pygame.K_s]:
                 self.direction.y = 1
                 self.status = "down"
             else:
                 self.direction.y = 0
             # phải trái
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d]:
                 self.direction.x = 1
                 self.status = "right"
-            elif keys[pygame.K_LEFT]:
+            elif keys[pygame.K_a]:
                 self.direction.x = -1
                 self.status = "left"
             else:
                 self.direction.x = 0
     
             #attack input
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_j]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
             # magic input
-            if keys[pygame.K_LCTRL]:
+            if keys[pygame.K_k]:
             
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
