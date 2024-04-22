@@ -4,10 +4,11 @@ from tile import Tile
 from player import Player
 from debug import debug
 from support import *
-from random import choice
+from random import choice, randint
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
+from particles import AnimationPlayer
 class Level:
     def __init__(self):
         # get the display surface
@@ -16,14 +17,21 @@ class Level:
         # sprite group setup
         self.visible_sprites =YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        
         # attack sprite
         self.current_attack = None
+        self.attack_sprites = pygame.sprite.Group()
+        #mục tiêu có thể bị tấn công
+        self.attackable_sprites = pygame.sprite.Group()
 
         #sprite setup
         self.create_map()
 
-        #user_interface
+        #user_interfaceq
         self.ui = UI()
+
+        #particles
+        self.animation_player = AnimationPlayer()
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout("../Chevalier/map/map_FloorBlocks.csv"),
@@ -47,7 +55,7 @@ class Level:
                             Tile((x, y), [ self.obstacle_sprites], 'invisible')
                         if style == 'grass':
                             random_grass_image = choice(graphics['grass'])
-                            Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'grass', random_grass_image)
+                            Tile((x,y), [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
                         if style == 'object':
                             surf = graphics['objects'][int(col)]
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'object', surf)
@@ -66,7 +74,13 @@ class Level:
                                 elif col == '391': monster_name = 'spirit'
                                 elif col == '392': monster_name ='raccoon'
                                 else: monster_name = 'squid'
-                                Enemy(monster_name,(x, y), [self.visible_sprites], self.obstacle_sprites)
+                                Enemy(
+                                    monster_name,
+                                    (x, y), 
+                                    [self.visible_sprites, self.attackable_sprites], 
+                                    self.obstacle_sprites,
+                                    self.damage_player,
+                                    self.trigger_death_paricles)
                             	
         #         if col == "x":
         #             Tile((x, y),[self.visible_sprites,self.obstacle_sprites])
@@ -74,7 +88,7 @@ class Level:
         #            self.player = Player((x,y),[self.visible_sprites], self.obstacle_sprites)
   
     def create_attack(self):
-        self.current_attack = Weapon(self.player,[self.visible_sprites])
+        self.current_attack = Weapon(self.player,[self.visible_sprites, self.attack_sprites])
 
     def destroy_attack(self):
         if self.current_attack:
@@ -85,12 +99,45 @@ class Level:
         print(strength)
         # print(style)
         # print(cost)
-  
+    
+    # Xử lý va chạm giữa các sprite. 
+    def player_attack_logic(self):
+        if self.attack_sprites:
+            for attack_sprite in self.attack_sprites:
+                #Sử dụng pygame.sprite.spritecollide() để kiểm tra va chạm giữa các sprite và xác định xem sprite nào bị tấn công sẽ bị hủy bỏ (cỏ).
+                collision_sprite = pygame.sprite.spritecollide(attack_sprite, self.attackable_sprites, False)
+                if collision_sprite:
+                    for target_sprite in collision_sprite:
+                        #mục tiêu phá huỷ "cỏ"
+                        if target_sprite.sprite_type == 'grass':
+                            #hiệu ứng khi cỏ bị diệt
+                            pos = target_sprite.rect.center
+                            #thêm kích thước cho hiệu ứng bit
+                            offset = pygame.math.Vector2(0,75)
+                            #tăng số lượng hiệu ứng lá rơi ra từ 3-6 lá
+                            for leaf in range(randint(3,6)):
+                                self.animation_player.create_grass_particles(pos - offset,[self.visible_sprites])
+                            target_sprite.kill()
+                        else:
+                            target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+
+    #Nhân vật nhận sát thương
+    def damage_player(self, amount, attack_type):
+        if self.player.vulnerable:
+            self.player.health -= amount
+            self.player.vulnerable = False
+            self.player.hurt_time = pygame.time.get_ticks()
+            #spawn pariticles
+            self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
+    # Gọi animation player để tạo hiệu ứng hạt
+    def trigger_death_paricles(self, pos, particle_type):
+        self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
     def run(self):
         #update and raw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
+        self.player_attack_logic()
         self.ui.display(self.player)
         # debug(self.player.direction)
         # debug(self.player.status)

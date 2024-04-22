@@ -3,8 +3,9 @@ import pygame
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, player, groups):
         super().__init__(groups)
+        self.sprite_type = 'weapon'
         direction = player.status.split("_")[0]
-        print(direction)
+        # print(direction)
         #graphic
         #load ảnh vũ khí khi tấn công
         full_path = f'../Chevalier/graphics/weapons/{player.weapon}/{direction}.png'
