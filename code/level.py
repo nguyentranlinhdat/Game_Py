@@ -9,6 +9,7 @@ from weapon import Weapon
 from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
+from magic import MagicPlayer
 class Level:
     def __init__(self):
         # get the display surface
@@ -32,6 +33,7 @@ class Level:
 
         #particles
         self.animation_player = AnimationPlayer()
+        self.magic_player = MagicPlayer(self.animation_player)
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout("../Chevalier/map/map_FloorBlocks.csv"),
@@ -96,10 +98,10 @@ class Level:
         self.create_attack = None
     
     def create_magic(self, style, strength, cost):
-        print(strength)
-        # print(style)
-        # print(cost)
-    
+        if style == 'heal':
+            self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
+        if style == 'flame':
+            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])    
     # Xử lý va chạm giữa các sprite. 
     def player_attack_logic(self):
         if self.attack_sprites:
