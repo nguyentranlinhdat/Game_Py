@@ -9,7 +9,9 @@ from weapon import Weapon
 from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
+
 from magic import MagicPlayer
+
 class Level:
     def __init__(self):
         # get the display surface
@@ -34,6 +36,8 @@ class Level:
         #particles
         self.animation_player = AnimationPlayer()
         self.magic_player = MagicPlayer(self.animation_player)
+
+
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout("../Chevalier/map/map_FloorBlocks.csv"),
@@ -46,7 +50,6 @@ class Level:
             'grass': import_folder('../Chevalier/graphics/grass'),
             'objects': import_folder('../Chevalier/graphics/objects')
         }
-        print(graphics)
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
@@ -65,12 +68,12 @@ class Level:
                         if style == 'entities':
                             if col == '394':
                                 self.player = Player(
-                                	(x,y),
-                                	[self.visible_sprites],
-                                	self.obstacle_sprites,
-                                	self.create_attack,
-                                	self.destroy_attack,
-                                	self.create_magic)
+                                        (x,y),
+                                        [self.visible_sprites],
+                                        self.obstacle_sprites,
+                                        self.create_attack,
+                                        self.destroy_attack,
+                                        self.create_magic)
                             else:
                                 if col == '390': monster_name = 'bamboo'
                                 elif col == '391': monster_name = 'spirit'
@@ -83,12 +86,12 @@ class Level:
                                     self.obstacle_sprites,
                                     self.damage_player,
                                     self.trigger_death_paricles)
-                            	
+
         #         if col == "x":
         #             Tile((x, y),[self.visible_sprites,self.obstacle_sprites])
         #         if col == "p":
         #            self.player = Player((x,y),[self.visible_sprites], self.obstacle_sprites)
-  
+
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites, self.attack_sprites])
 
@@ -102,6 +105,7 @@ class Level:
             self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
         if style == 'flame':
             self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])    
+
     # Xử lý va chạm giữa các sprite. 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -131,9 +135,11 @@ class Level:
             self.player.hurt_time = pygame.time.get_ticks()
             #spawn pariticles
             self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
-    # Gọi animation player để tạo hiệu ứng hạt
+
+    # Gọi animation player để tạo hiệu ứng sau khi chết
     def trigger_death_paricles(self, pos, particle_type):
         self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
+
     def run(self):
         #update and raw the game
         self.visible_sprites.custom_draw(self.player)
@@ -141,9 +147,6 @@ class Level:
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
         self.ui.display(self.player)
-        # debug(self.player.direction)
-        # debug(self.player.status)
-        
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
