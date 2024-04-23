@@ -190,19 +190,16 @@ class Player(Entity):
         base_damage = self.stats['attack']
         weapon_damage = weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
-    
-    # Tính sát thương đầu ra = sát thương cơ bản + sát thương từ phép
-    def get_full_magic_damage(self):
-        base_damage = self.stats['magic']
-        spell_damage = magic_data[self.magic]['strength']
-        return base_damage + spell_damage
-
-    # Hồi năng lượng
+    #hồi năng lượng theo thời gian
     def energy_recovery(self):
-        if self.energy < self.stats['energy']:
+        if self.energy <=self.stats['energy']:
             self.energy += 0.02 * self.stats['magic']
         else:
             self.energy = self.stats['energy']
+    def get_full_magic_damage(self):
+        base_damage = self.stats['magic']
+        magic_damage = magic_data[self.magic]['strength']
+        return base_damage + magic_damage
 
     def update(self):
         self.input()
