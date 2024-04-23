@@ -184,11 +184,25 @@ class Player(Entity):
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
-    #xác định sát thương cơ bản + sát thương từ vũ khí
+
+    # Tính sát thương đầu ra = sát thương cơ bản + sát thương từ vũ khí
     def get_full_weapon_damage(self):
         base_damage = self.stats['attack']
         weapon_damage = weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
+    
+    # Tính sát thương đầu ra = sát thương cơ bản + sát thương từ phép
+    def get_full_magic_damage(self):
+        base_damage = self.stats['magic']
+        spell_damage = magic_data[self.magic]['strength']
+        return base_damage + spell_damage
+
+    # Hồi năng lượng
+    def energy_recovery(self):
+        if self.energy < self.stats['energy']:
+            self.energy += 0.02 * self.stats['magic']
+        else:
+            self.energy = self.stats['energy']
 
     def update(self):
         self.input()
@@ -196,3 +210,4 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        self.energy_recovery()
