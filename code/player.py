@@ -7,9 +7,9 @@ class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic) :
         super().__init__(groups)
 
-        self.image = pygame.image.load('../Chevalier/graphics/test/player.png').convert_alpha()
+        self.image = pygame.image.load('graphics/test/player.png').convert_alpha()  
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0, -26)
+        self.hitbox = self.rect.inflate(0, -24)
         #graphics setup
         self.import_player_assets()
         self.status = 'down'
@@ -57,7 +57,7 @@ class Player(Entity):
 
     #hoạt ảnh nhân vật khi tương tác phím 
     def import_player_assets(self):
-        character_path = '../Chevalier/graphics/player/'
+        character_path = 'graphics/player/'
         self.animations = {'up': [],'down': [],'left': [],'right': [],
             'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
             'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
@@ -79,19 +79,19 @@ class Player(Entity):
             # Thiết lập các nút di chuyển
             keys = pygame.key.get_pressed()
             # lên, xuống    
-            if keys[pygame.K_w]:
+            if keys[pygame.K_w] or keys[pygame.K_UP]:
                 self.direction.y = -1
                 self.status = "up"
-            elif keys[pygame.K_s]:
+            elif keys[pygame.K_s]or keys[pygame.K_DOWN]:
                 self.direction.y = 1
                 self.status = "down"
             else:
                 self.direction.y = 0
             # phải trái
-            if keys[pygame.K_d]:
+            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                 self.direction.x = 1
                 self.status = "right"
-            elif keys[pygame.K_a]:
+            elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
                 self.direction.x = -1
                 self.status = "left"
             else:
