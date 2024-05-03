@@ -13,14 +13,22 @@ class Game:
 
         self.level = Level()
 
+        #sound main
+        main_sound = pygame.mixer.Sound("../Chevalier/audio/main.ogg")
+        main_sound.play(loops = -1)
+        main_sound.set_volume(0.3)
+
     def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        self.level.toggle_menu()
 
-            self.screen.fill("black")
+            self.screen.fill(WATER_COLOR)
             self.level.run()
             # debug("hello")
             pygame.display.update() 
