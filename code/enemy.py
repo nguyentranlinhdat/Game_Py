@@ -54,7 +54,7 @@ class Enemy(Entity):
     def import_graphics(self,name):
         self.animations = {'idle':[],'move':[],'attack':[]}
         # tạo path dẫn đến foder chứa hình ảnh
-        main_path = f'../Chevalier/graphics/monsters/{name}/'
+        main_path = f'graphics/monsters/{name}/'
         for animation in self.animations.keys():
             self.animations[animation] = import_folder(main_path + animation)
     #khoảng cách monster và player để quái vật tấn công, đuổi theo nhân vật, và trạng thái nghỉ của quái vật
@@ -121,6 +121,7 @@ class Enemy(Entity):
             self.image.set_alpha(alpha) 
         else:
             self.image.set_alpha(255)
+            
     #Xác định sát thương và loại sprite. 
     #Tạo phương thức get_damage để xác định sát thương từ người chơi và loại tấn công, cũng như xác định loại sprite để xử lý hủy sprite tương ứng.
     def get_damage(self, player, attack_type):
