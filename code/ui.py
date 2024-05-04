@@ -62,7 +62,7 @@ class UI:
 
     # swap weapon
     def weapon_overlay(self, weapon_index, has_switched):
-        bg_rect = self.selection_box(10, 630, has_switched) #weapon
+        bg_rect = self.selection_box(20, 630, has_switched) #weapon
         weapon_surf = self.weapon_graphics[weapon_index]
         weapon_rect = weapon_surf.get_rect(center = bg_rect.center)
 
@@ -70,7 +70,7 @@ class UI:
 
     #swap magic
     def magic_overlay(self, magic_index, has_switched):
-        bg_rect = self.selection_box(80, 635, has_switched) #magic
+        bg_rect = self.selection_box(100, 630, has_switched) #magic
         magic_surf = self.magic_graphics[magic_index]
         magic_rect = magic_surf.get_rect(center = bg_rect.center)
 

@@ -9,8 +9,10 @@ from weapon import Weapon
 from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
+
 from magic import MagicPlayer
 from upgrade import Upgrade
+
 class Level:
     def __init__(self):
         # get the display surface
@@ -37,19 +39,20 @@ class Level:
         #particles
         self.animation_player = AnimationPlayer()
         self.magic_player = MagicPlayer(self.animation_player)
+
+
     def create_map(self):
         layouts = {
-            'boundary': import_csv_layout("../Chevalier/map/map_FloorBlocks.csv"),
-            'grass': import_csv_layout("../Chevalier/map/map_Grass.csv"),
-            'object': import_csv_layout("../Chevalier/map/map_Objects.csv"),
-            'entities': import_csv_layout("../Chevalier/map/map_Entities.csv")
+            'boundary': import_csv_layout("map/map_FloorBlocks.csv"),
+            'grass': import_csv_layout("map/map_Grass.csv"),
+            'object': import_csv_layout("map/map_Objects.csv"),
+            'entities': import_csv_layout("map/map_Entities.csv")
 
         }
         graphics = {
-            'grass': import_folder('../Chevalier/graphics/grass'),
-            'objects': import_folder('../Chevalier/graphics/objects')
+            'grass': import_folder('graphics/grass'),
+            'objects': import_folder('graphics/objects')
         }
-        print(graphics)
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
@@ -74,6 +77,7 @@ class Level:
                                 	self.create_attack,
                                 	self.destroy_attack,
                                 	self.create_magic)
+
                             else:
                                 if col == '390': monster_name = 'bamboo'
                                 elif col == '391': monster_name = 'spirit'
@@ -85,14 +89,16 @@ class Level:
                                     [self.visible_sprites, self.attackable_sprites], 
                                     self.obstacle_sprites,
                                     self.damage_player,
+
                                     self.trigger_death_paricles,
                                     self.add_exp)
                             	
+
         #         if col == "x":
         #             Tile((x, y),[self.visible_sprites,self.obstacle_sprites])
         #         if col == "p":
         #            self.player = Player((x,y),[self.visible_sprites], self.obstacle_sprites)
-  
+
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites, self.attack_sprites])
 
@@ -106,6 +112,7 @@ class Level:
             self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
         if style == 'flame':
             self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])    
+
     # Xử lý va chạm giữa các sprite. 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -135,7 +142,8 @@ class Level:
             self.player.hurt_time = pygame.time.get_ticks()
             #spawn pariticles
             self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
-    # Gọi animation player để tạo hiệu ứng hạt
+
+    # Gọi animation player để tạo hiệu ứng sau khi chết
     def trigger_death_paricles(self, pos, particle_type):
         self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
     # cộng điểm exp khi tiêu diệt monster
@@ -144,9 +152,11 @@ class Level:
     # Dừng game mở menu setting game
     def toggle_menu(self):
         self.game_paused = not self.game_paused
+
     def run(self):
         self.visible_sprites.custom_draw(self.player)
         self.ui.display(self.player)
+
         if self.game_paused:
             self.upgrade.display()
             #display updrate menu
@@ -160,7 +170,6 @@ class Level:
         # debug(self.player.direction)
         # debug(self.player.status)
         
-
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
         #general setup
@@ -171,7 +180,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         #creating the floor
-        self.floor_surf = pygame.image.load("../Chevalier/graphics/tilemap/ground.png")
+        self.floor_surf = pygame.image.load("graphics/tilemap/ground.png")
         self.floor_rect = self.floor_surf.get_rect(topleft =(0,0))
 
     def custom_draw(self, player):
