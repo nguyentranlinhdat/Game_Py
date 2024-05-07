@@ -2,9 +2,44 @@ import pygame
 from settings import *
 from support import import_folder
 from entity import Entity
-
+"""class Player  - Khởi tạo đối tượng nhân vật Chevalier. chứa các phương thức khởi tạo hình ảnh hoạt ảnh nhân vật, hành động tấn công của nhân vật"""
 class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic) :
+        """
+        Attributes:
+            image (pygame.Surface): Vùng hình ảnh của Nhân vật.
+            rect (pygame.Rect): Vùng hình chữ nhật xác định vị trí và kích thước của nhân vật trên màn hình.
+            hitbox (pygame.Rect): Hình chữ nhật xác định khu vực va chạm của nhân vật.
+            animations (dict): Danh sách các hình ảnh cho các hoạt ảnh khác nhau của nhân vật.
+            status (str): Trạng thái hiện tại của nhân vật.
+            attacking (bool): Biến đánh dấu xem nhân vật có đang tấn công không.
+            attack_cooldown (int): Thời gian hồi chiêu giữa các lần tấn công.
+            attack_time (int): Thời điểm cuối cùng nhân vật tấn công. 
+            obstacle_sprites (pygame.sprite.AbstractGroup): Nhóm sprite chứa các vật cản của game.
+            create_attack (function): Hàm tạo đòn tấn công.
+            destroy_attack (function): Hàm hủy đòn tấn công.
+            weapon_index (int): index của vũ khí hiện tại mà nhân vật đang giữ.
+            weapon (str): Tên của vũ khí.
+            can_switch_weapon (bool): Biến đánh dấu xem nhân vật có thể đổi vũ khí không.
+            weapon_switch_time (int): Thời điểm cuối cùng nhân vật đổi vũ khí.
+            switch_duration_cooldown (int): Thời gian hồi chiêu giữa các lần đổi vũ khí.
+            create_magic (function): Hàm tạo ra tấn công phép thuật.
+            magic_index (int): index của phép thuật hiện tại nhân vật đang giữ.
+            magic (str): Tên của phép thuật.
+            can_switch_magic (bool): Biến đánh dấu xem nhân vật có thể đổi phép thuật không.
+            magic_switch_time (int): Thời điểm cuối cùng nhân vật đổi phép thuật. 
+            stats (dict): Thống kê các thuộc tính: máu, năng lượng, tấn công, phép thuật và tốc độ.
+            max_stats (dict): Giá trị tối đa cho các thuộc tính của nhân vật.
+            upgrade_cost (dict): Chi phí nâng cấp các thuộc tính của nhân vật.
+            health (float): Mức máu hiện tại của nhân vật.
+            energy (float): Mức năng lượng hiện tại của nhân vật.
+            exp (int): Kinh nghiệm của nhân vật.
+            speed (int): Tốc độ di chuyển của nhân vật.
+            vulnerable (bool): Biến đánh dấu xem nhân vật có thể bị tấn công không.
+            hurt_time (int): Thời điểm cuối cùng nhân vật bị tấn công.
+            invulnerability_duration (int): Thời gian miễn nhiễm tấn công sau khi bị tấn công.
+            weapon_attack_sound (pygame.mixer.Sound): Âm thanh khi tấn công với vũ khí.
+        """
         super().__init__(groups)
 
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()  
@@ -65,7 +100,9 @@ class Player(Entity):
 
     #hoạt ảnh nhân vật khi tương tác phím 
     def import_player_assets(self):
-        character_path = 'graphics/player/'
+        """def import_player_assets load tất cả hoạt ảnh đồ hoạ của nhân vật"""
+        character_path = '../Chevalier/graphics/player/'
+
         self.animations = {'up': [],'down': [],'left': [],'right': [],
             'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
             'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
@@ -75,6 +112,7 @@ class Player(Entity):
             self.animations[animation] = import_folder(full_path)
 
     def input(self):
+        """def input()  Xử lý các sự kiện đầu vào từ bàn phím của người chơi và thực hiện các hành động tương ứng của nhân vật."""
         """
         WSAD để di chuyển
         Q để chuyển đổi vũ khí
@@ -83,6 +121,7 @@ class Player(Entity):
         K để dùng phép
         """
         #tránh người chơi đổi hướng trong thời gian tung chiêu
+
         if not self.attacking:
             # Thiết lập các nút di chuyển
             keys = pygame.key.get_pressed()
@@ -141,6 +180,9 @@ class Player(Entity):
                 self.magic = list(magic_data.keys())[self.magic_index] 
             
     def get_status(self):
+        """ get_status() Kiểm tra, cập nhật trạng thái hiện tại của nhân vật dựa trên hướng di chuyển và hành động tấn công.
+            Kiểm tra trạng nghỉ và tấn công nhân vật tránh trường hợp bị chồng hoạt ảnh
+        """
         #trang thái nghỉ
         if self.direction.x == 0 and self.direction.y == 0:
             if not 'idle' in self.status and not 'attack' in self.status:
@@ -158,9 +200,11 @@ class Player(Entity):
             if 'attack' in self.status:
                 self.status = self.status.replace("_attack","")
 
-    
     #thời gian hồi chiêu của đòn tấn công
     def cooldowns(self):
+        """def cooldowns():Cập nhật thời gian hồi chiêu và thời gian có thể đổi vũ khí/phép thuật của nhân vật.
+        tránh trường hợp người chơi tấn côn liên tục.
+        """
         # thực hiện việc đo lường time
         current_time = pygame.time.get_ticks()
         if self.attacking:
@@ -177,6 +221,10 @@ class Player(Entity):
             if current_time - self.hurt_time >= self.invulnerability_duration:
                 self.vulnerable = True
     def animate(self):
+        """def animate(): Cập nhật hoạt ảnh của người chơi dựa trên trạng thái hiện tại và thời gian.
+            Sử dụng vòng lập để load các hoạt ảnh của nhân vật.
+            Hiệu ứng nhấp nháy của nhân vật.
+        """
         animation = self.animations[self.status]
         #loop over the frame index
         self.frame_index += self.animation_speed
@@ -198,27 +246,37 @@ class Player(Entity):
 
     # Tính sát thương đầu ra = sát thương cơ bản + sát thương từ vũ khí
     def get_full_weapon_damage(self):
+        """def get_full_weapon_damage(): Tính toán xác thương gây ra bằng vũ khí
+            Sát thương = lượng sát thương mặc định + sát thương từ vũ khí
+        """
         base_damage = self.stats['attack']
         weapon_damage = weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
     
     def get_value_by_index(self,index):
+        """def get_value_by_index(): Trả về giá trị của một thuộc tính của người chơi dựa trên chỉ số."""
         return list(self.stats.values())[index]
     def get_cost_by_index(self,index):
+        """def get_cost_by_index(): Trả về chi phí nâng cấp của một thuộc tính của người chơi dựa trên chỉ số."""
         return list(self.upgrade_cost.values())[index]
 
     #hồi năng lượng theo thời gian
     def energy_recovery(self):
+        """def energy_recovery(): Hồi phục năng lượng của người chơi theo thời gian."""
         if self.energy <=self.stats['energy']:
             self.energy += 0.02 * self.stats['magic']
         else:
             self.energy = self.stats['energy']
     def get_full_magic_damage(self):
+        """get_full_magic_damage: Tính toán xác thương gây ra bằng phép
+            Sát thương = lượng sát thương mặc định + sát thương phép
+        """
         base_damage = self.stats['magic']
         magic_damage = magic_data[self.magic]['strength']
         return base_damage + magic_damage
 
     def update(self):
+        """def update(): cập nhật các trạng thái hoạt động của người chơi"""
         self.input()
         self.cooldowns()
         self.get_status()

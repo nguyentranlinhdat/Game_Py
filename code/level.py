@@ -13,11 +13,11 @@ from particles import AnimationPlayer
 from magic import MagicPlayer
 from upgrade import Upgrade
 
+"""Khởi tạo lớp quản lí việc tạo map, quản lí hành động, tương tác của các sprite"""
 class Level:
     """
-    Khởi tạo lớp quản lí việc tạo map, quản lí hành động, tương tác của các sprite
-    Thuộc tính:
-        display_surface (Surface): Hiển thị bề mặt của trò chơi.
+      Attribute:
+
         game_paused (bool): Trạng thái của trò chơi, có đang tạm dừng hay không.
         visible_sprites (YSortCameraGroup): Nhóm sprite có thể nhìn thấy được trên màn hình.
         obstacle_sprites (Group): Nhóm sprite là vật cản không thể xuyên qua.
@@ -28,7 +28,6 @@ class Level:
         upgrade (Upgrade): Cửa sổ nâng cấp.
         animation_player (AnimationPlayer): Hoạt ảnh nhân vật.
         magic_player (MagicPlayer): Quản lý phép của nhân vật.
-
     Phương thức:
         create_map(): Tạo bản đồ cấp độ từ các tệp layout và graphics.
         create_attack(): Tạo hoạt ảnh tấn công.
@@ -40,7 +39,6 @@ class Level:
         add_exp(amount): Cộng điểm kinh nghiệm cho nhân vật sau khi tiêu diệt một quái vật.
         toggle_menu(): Chuyển đổi trạng thái tạm dừng của trò chơi và hiển thị hoặc ẩn menu nâng cấp.
         run(): Cập nhật trạng thái và hiển thị trò chơi.
-
     """
     def __init__(self):
         # get the display surface
@@ -70,10 +68,9 @@ class Level:
 
 
     def create_map(self):
-        """
+        """def create_map():
         Dựa vào các file csv được tạo ra bởi Tiled để tiến hành duyệt các phần tử để hiển thị chúng theo vị trí tương ứng trên bản đồ
-        Đối với boundary thì chúng ta cần phải ẩn chúng đi vì nó không cần thiết trong việc hiển thị hình ảnh của bản đồ
-        """
+        Đối với boundary thì cần phải ẩn chúng đi vì nó không cần thiết trong việc hiển thị hình ảnh của bản đồ"""
         layouts = {
             'boundary': import_csv_layout("map/map_FloorBlocks.csv"),
             'grass': import_csv_layout("map/map_Grass.csv"),
@@ -126,6 +123,7 @@ class Level:
                                     self.add_exp)
 
     def create_attack(self):
+        """def create_attack(): tạo đòn tấn công weapon"""
         self.current_attack = Weapon(self.player,[self.visible_sprites, self.attack_sprites])
 
     def destroy_attack(self):
@@ -134,6 +132,7 @@ class Level:
         self.create_attack = None
     
     def create_magic(self, style, strength, cost):
+        """def create_magic() Xây dựng hàm tạo đòn tấn công từ class weapon:"""
         if style == 'heal':
             self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
         if style == 'flame':
@@ -141,6 +140,7 @@ class Level:
 
     # Xử lý va chạm giữa các sprite. 
     def player_attack_logic(self):
+        """ def player_attack_logic(): Xử lý va chạm giữa các sprite. Kiểm tra va chạm giữa các sprite và xác định xem sprite nào bị tấn công sẽ bị hủy bỏ (cỏ)."""
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
                 #Sử dụng pygame.sprite.spritecollide() để kiểm tra va chạm giữa các sprite và xác định xem sprite nào bị tấn công sẽ bị hủy bỏ (cỏ).
@@ -163,8 +163,7 @@ class Level:
     # Nhân vật nhận sát thương
     def damage_player(self, amount, attack_type):
         """
-        Gây sát thương cho người chơi.
-        Khi bị tấn công nhân vật sẽ bị mất máu đồng thời hình ảnh của nhân vật sẽ nhấp nháy
+        def damage_player(): nhận sát thương của nhân vật. Khi bị tấn công nhân vật sẽ bị mất máu đồng thời hình ảnh của nhân vật sẽ nhấp nháy
         Máu của nhân vật sẽ bị trừ đi bằng với lượng sát thương nhận phải từ quái vật.
         Đối số:
             amount (int): Lượng sát thương.
@@ -179,21 +178,16 @@ class Level:
 
     # Gọi animation player để tạo hiệu ứng sau khi chết
     def trigger_death_paricles(self, pos, particle_type):
-        """Kích hoạt hiệu ứng sau khi một sprite chết hoặc phá hủy.
 
-        Đối số:
-            pos (tuple): Vị trí của sprite chết.
-            particle_type (str): Loại hiệu ứng.
-
-        """
+        """ def trigger_death_paricles(): Tạo hiệu ứng hạt bằng cách gọi animation player"""
         self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
-    
-    # Cộng điểm exp khi tiêu diệt monster
+  # Cộng điểm exp khi tiêu diệt monster
     def add_exp(self, amount):
+        """def add_exp() cộng điểm exp khi tiêu diệt monster"""
         self.player.exp += amount
 
-    # Dừng game mở menu setting game
     def toggle_menu(self):
+        """def toggle_menu(): Dừng game mở menu updrae game"""
         self.game_paused = not self.game_paused
 
     def run(self):
@@ -209,14 +203,18 @@ class Level:
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
             
-class YSortCameraGroup(pygame.sprite.Group):
-    """
-    Một lớp để quản lý các sprite trong một khung nhìn camera với sắp xếp theo trục Y.
 
+        #update and raw the game
+        # debug(self.player.direction)
+        # debug(self.player.status)
+        
+""" class YSortCameraGroup()
+    Một lớp để quản lý các sprite trong một khung nhìn camera với sắp xếp theo trục Y.
     Lớp này mở rộng chức năng của pygame.sprite.Group để xử lý các sprite trong một khung nhìn camera
     với sắp xếp theo trục Y để vẽ đúng vị trí. Được thiết kế đặc biệt cho các trò chơi 2D nơi camera
-    theo dõi một nhân vật chính và các sprite được sắp xếp dựa trên tọa độ Y của họ để vẽ đúng.
-
+    theo dõi một nhân vật chính và các sprite được sắp xếp dựa trên tọa độ Y của họ để vẽ đúng."""
+class YSortCameraGroup(pygame.sprite.Group):
+    """
     Thuộc tính:
         display_surface (Surface): Bề mặt mà các sprite được vẽ lên.
         half_width (int): Nửa chiều rộng của bề mặt hiển thị.
@@ -231,10 +229,20 @@ class YSortCameraGroup(pygame.sprite.Group):
 
     """
     def __init__(self):
-        """
-        Khởi tạo class và các thuộc tính liên quan
-        Sử dụng Tiled để tạo map cho game và dùng image.load() của pygame để load bản đồ vào game
-        """
+
+        """ 
+        Thuộc tính:
+        display_surface (Surface): Bề mặt mà các sprite được vẽ lên.
+        half_width (int): Nửa chiều rộng của bề mặt hiển thị.
+        half_height (int): Nửa chiều cao của bề mặt hiển thị.
+        offset (Vector2): Phần dời được sử dụng để điều chỉnh vị trí của các sprite so với khung nhìn camera.
+        floor_surf (Surface): Bề mặt biểu diễn hình nền/sàn.
+        floor_rect (Rect): Hình chữ nhật biểu diễn vị trí và kích thước của bề mặt sàn.
+        Phương thức:
+        custom_draw(player): Vẽ các sprite lên bề mặt hiển thị với sắp xếp theo trục Y.
+        enemy_update(player): Cập nhật các sprite kẻ địch dựa trên vị trí của nhân vật."""
+        #general setup
+
         super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2 
@@ -245,8 +253,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_rect = self.floor_surf.get_rect(topleft =(0,0))
 
     def custom_draw(self, player):
-        """Vẽ các sprite lên bề mặt hiển thị với sắp xếp theo trục Y.
-
+        """ def custom_draw(): Vẽ các sprite lên bề mặt hiển thị với sắp xếp theo trục Y.
         Đối số:
             player (Sprite): Sprite nhân vật được sử dụng để tính toán khung nhìn camera.
 
@@ -264,11 +271,13 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
     def enemy_update(self,player):
         """
+
+        def enemy_update():
+
         Cập nhật các sprite quái vật dựa trên vị trí của nhân vật.
         Kẻ địch sẽ di chuyển về phía nhân vật và tấn công nhân vật khi nhân vật lại gần
         Đối số:
             player (Sprite): Sử dụng nhân vật để tính toán hành vi của quái vật.
-
         """
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:
