@@ -7,7 +7,7 @@ class Game:
     def __init__(self, screen):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
-
+        pygame.display.set_caption("Chevalier")
         self.state = "main_menu"
         self.bg = pygame.image.load("../Chevalier/assets/Background.png")
         self.font = pygame.font.Font("../Chevalier/assets/font.ttf", 100)
@@ -32,7 +32,7 @@ class Game:
         while self.state == "main_menu":
             self.screen.blit(self.bg, (0, 0))
             menu_mouse_pos = pygame.mouse.get_pos()
-            menu_text = self.font.render("MAIN MENU", True, "#b68f40")
+            menu_text = self.font.render("CHEVALIER", True, "#b68f40")
             menu_rect = menu_text.get_rect(center=(640, 100))
             self.screen.blit(menu_text, menu_rect)
 
