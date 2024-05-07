@@ -4,13 +4,26 @@ from settings import *
 
 class UI:
     def __init__(self):
-        """ Attributes:
-            font: Font chữ được sử dụng cho văn bản trên giao diện.
-            health_bar_rect: vùng hình chữ nhật đại diện cho thanh máu.
-            energy_bar_rect: vùng hình chữ nhật đại diện cho thanh năng lượng.
-            weapon_graphics: Danh sách hình ảnh các loại vũ khí.
-            magic_graphics: Danh sách hình các loại phép thuật."""
-        #general
+        """
+        Lớp này quản lý các yếu tố giao diện cho trò chơi.
+
+        Thuộc tính:
+            display_surface (pygame.Surface): Vị trí các yếu tố UI được vẽ.
+            font (pygame.font.Font): Font chữ được sử dụng cho các yếu tố văn bản.
+            health_bar_rect (pygame.Rect): Hình chữ nhật xác định vị trí và kích thước của thanh máu.
+            energy_bar_rect (pygame.Rect): Hình chữ nhật xác định vị trí và kích thước của thanh năng lượng.
+            weapon_graphics (list of pygame.Surface): Danh sách chứa các hình ảnh vũ khí.
+            magic_graphics (list of pygame.Surface): Danh sách chứa các hình ảnh phép thuật.
+
+        Phương thức:
+            __init__(self): Khởi tạo các yếu tố UI, bao gồm tải font chữ và hình ảnh.
+            show_bar(self, current, max_amount, bg_rect, color): Vẽ thanh trạng thái (ví dụ: máu, năng lượng) với màu sắc được chỉ định.
+            show_exp(self, exp): Hiển thị điểm kinh nghiệm (EXP) của nhân vật.
+            selection_box(self, left, top, has_switched): Tạo hộp chọn cho vũ khí hoặc phép.
+            weapon_overlay(self, weapon_index, has_switched): Hiển thị hình ảnh vũ khí được chọn.
+            magic_overlay(self, magic_index, has_switched): Hiển thị hình ảnh phép được chọn.
+            display(self, player): Cập nhật và hiển thị tất cả các yếu tố UI dựa trên số liệu nhân vật.
+        """
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
         #bar setup
@@ -47,8 +60,8 @@ class UI:
         # drawing the bar
         pygame.draw.rect(self.display_surface, color, current_rect)
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, bg_rect, 3)
+
     def show_exp(self, exp):
-        """def show_exp(): hiển thị ô kinh nghiệm"""
         text_surf = self.font.render(str(int(exp)), False, TEXT_COLOR)
         #vị trí của ô EXP (góc dưới phải màn, hình cách màn 20px)
         x = self.display_surface.get_size()[0] - 20
@@ -86,9 +99,7 @@ class UI:
 
     #swap magic
     def magic_overlay(self, magic_index, has_switched):
-        """def magic_overplay() Hiển thị hình ảnh của phép khi thay đổi trong ô vuông"""
-        bg_rect = self.selection_box(80, 635, has_switched) #magic
-
+        bg_rect = self.selection_box(120, 630, has_switched) #magic
         magic_surf = self.magic_graphics[magic_index]
         magic_rect = magic_surf.get_rect(center = bg_rect.center)
 
@@ -103,4 +114,3 @@ class UI:
 
         self.weapon_overlay(player.weapon_index, not player.can_switch_weapon)
         self.magic_overlay(player.magic_index, not player.can_switch_magic)
-        # self.selection_box(80, 635) #magic

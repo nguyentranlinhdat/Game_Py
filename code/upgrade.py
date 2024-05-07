@@ -23,12 +23,12 @@ class Upgrade:
     def input(self):
         keys = pygame.key.get_pressed()
         if self.can_move:
-            if keys[pygame.K_RIGHT] and self.selection_index < self.attribute_nr -1:
+            if keys[pygame.K_d] and self.selection_index < self.attribute_nr -1:
                 self.selection_index += 1
                 self.can_move = False
                 self.selection_time = pygame.time.get_ticks()
 
-            elif keys[pygame.K_LEFT] and self.selection_index >= 1:
+            elif keys[pygame.K_a] and self.selection_index >= 1:
                 self.selection_index -= 1
                 self.can_move = False
                 self.selection_time = pygame.time.get_ticks()

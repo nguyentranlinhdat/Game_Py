@@ -26,7 +26,7 @@ class Enemy(Entity):
         self.image = self.animations[self.status][self.frame_index]
         # movement
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,-10)
+        self.hitbox = self.rect.inflate(-4,-16)
         self.obstacle_sprites = obstacle_sprites
 
         # status monster
@@ -55,8 +55,8 @@ class Enemy(Entity):
         self.invincibility_duration = 300
 
         #sounds
-        self.death_sound = pygame.mixer.Sound('../Chevalier/audio/death.wav')
-        self.hit_sound = pygame.mixer.Sound('../Chevalier/audio/hit.wav')
+        self.death_sound = pygame.mixer.Sound('audio/death.wav')
+        self.hit_sound = pygame.mixer.Sound('audio/hit.wav')
         self.attack_sound = pygame.mixer.Sound(monster_info['attack_sound'])
         self.death_sound.set_volume(0.6)
         self.hit_sound.set_volume(0.2)
@@ -174,13 +174,11 @@ class Enemy(Entity):
         if not self.vulnerable:
             self.direction *= -self.resistance
     def update(self):
-         self.hit_reaction()
-         self.move(self.speed)
-         self.animate()
-         self.cooldowns()
-         self.check_death()
+        self.hit_reaction()
+        self.move(self.speed)
+        self.animate()
+        self.cooldowns()
+        self.check_death()
     def enemy_update(self, player):
         self.get_status(player)
         self.actions(player)
-             
-    

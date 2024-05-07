@@ -3,6 +3,24 @@ from support import import_folder
 from random import choice
 
 class AnimationPlayer:
+    """
+    Lớp này quản lý việc tạo và phát các hiệu ứng hạt trong trò chơi.
+
+    Thuộc tính:
+        frames (dict): Từ điển chứa các khung hình hoạt hình được tải trước cho các hiệu ứng hạt khác nhau.
+            - Khóa: Chuỗi đại diện cho các loại hoạt hình (ví dụ: "flame", "claw", "leaf").
+            - Giá trị: Danh sách các đối tượng pygame.Surface đại diện cho các khung hình hoạt hình.
+
+    Phương thức:
+        __init__(self): Tải tất cả các khung hình hoạt hình hạt từ các thư mục được chỉ định.
+
+        reflect_images(self, frames): Tạo phiên bản phản chiếu của các khung hình hoạt hình được cung cấp (lật theo chiều ngang).
+
+        create_grass_particles(self, pos, groups): Tạo hiệu ứng hạt "lá" ngẫu nhiên tại vị trí đã cho.
+
+        create_particles(self, animation_type, pos, groups):
+            Tạo hiệu ứng hạt của loại hoạt hình được chỉ định (ví dụ: "flame", "slash") tại vị trí đã cho.
+    """
     def __init__(self):
         self.frames = {
             # magic
@@ -21,7 +39,7 @@ class AnimationPlayer:
             'squid': import_folder('graphics/particles/smoke_orange'),
             'raccoon': import_folder('graphics/particles/raccoon'),
             'spirit': import_folder('graphics/particles/nova'),
-            'bamboo': import_folder('graphics/particles/bamboo'),
+            'cyclop': import_folder('graphics/particles/smoke2'),
             
             # leafs 
             'leaf': (
@@ -61,6 +79,25 @@ class AnimationPlayer:
 
 #Hiệu ứng hạt
 class ParticleEffect(pygame.sprite.Sprite):
+    """
+    Lớp này đại diện cho một hiệu ứng nhỏ trong trò chơi.
+
+    Thuộc tính:
+        sprite_type (str): Loại hiệu ứng hạt (ví dụ: "magic").
+        frame_index (int): Chỉ số khung hình hiện tại.
+        animation_speed (float): Tốc độ hoạt hình (giá trị thấp hơn = chậm hơn).
+        frames (list of pygame.Surface): Danh sách các khung hình hoạt hình cho hiệu ứng hạt.
+        image (pygame.Surface): Khung hình hoạt hình hiện tại đang được hiển thị.
+        rect (pygame.Rect): Hình chữ nhật bao quanh hình ảnh (dựa trên tâm của hình ảnh).
+
+    Phương thức:
+        __init__(self, pos, animation_frames, groups): Khởi tạo hiệu ứng hạt với vị trí ban đầu, các khung hình hoạt hình và nhóm sprite.
+        animate(self):
+            - Cập nhật chỉ số khung hình và thay đổi hình ảnh hiển thị tương ứng.
+            - Nếu hết khung hình, hiệu ứng sẽ tự hủy.
+        update(self): Gọi phương thức animate để cập nhật hiệu ứng.
+    """
+
     def __init__(self,pos,animation_frames,groups):
         super().__init__(groups)
         self.sprite_type = 'magic'

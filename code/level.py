@@ -108,7 +108,7 @@ class Level:
                                         self.create_magic)
 
                             else:
-                                if col == '390': monster_name = 'cyclope'
+                                if col == '390': monster_name = 'cyclop'
                                 elif col == '391': monster_name = 'spirit'
                                 elif col == '392': monster_name ='raccoon'
                                 else: monster_name = 'squid'
@@ -165,7 +165,7 @@ class Level:
         """
         def damage_player(): nhận sát thương của nhân vật. Khi bị tấn công nhân vật sẽ bị mất máu đồng thời hình ảnh của nhân vật sẽ nhấp nháy
         Máu của nhân vật sẽ bị trừ đi bằng với lượng sát thương nhận phải từ quái vật.
-        Đối số:
+        Tham số:
             amount (int): Lượng sát thương.
             attack_type (str): Loại tấn công.
         """
@@ -178,8 +178,12 @@ class Level:
 
     # Gọi animation player để tạo hiệu ứng sau khi chết
     def trigger_death_paricles(self, pos, particle_type):
+        """
+        Tham số:
+            pos (tuple): Vị trí của sprite chết.
+            particle_type (str): Loại hiệu ứng.
 
-        """ def trigger_death_paricles(): Tạo hiệu ứng hạt bằng cách gọi animation player"""
+        """
         self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
   # Cộng điểm exp khi tiêu diệt monster
     def add_exp(self, amount):
@@ -253,8 +257,9 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_rect = self.floor_surf.get_rect(topleft =(0,0))
 
     def custom_draw(self, player):
-        """ def custom_draw(): Vẽ các sprite lên bề mặt hiển thị với sắp xếp theo trục Y.
-        Đối số:
+        """Vẽ các sprite lên bề mặt hiển thị với sắp xếp theo trục Y.
+
+        Tham số:
             player (Sprite): Sprite nhân vật được sử dụng để tính toán khung nhìn camera.
 
         """
@@ -271,12 +276,11 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
     def enemy_update(self,player):
         """
-
         def enemy_update():
 
         Cập nhật các sprite quái vật dựa trên vị trí của nhân vật.
         Kẻ địch sẽ di chuyển về phía nhân vật và tấn công nhân vật khi nhân vật lại gần
-        Đối số:
+        Tham số:
             player (Sprite): Sử dụng nhân vật để tính toán hành vi của quái vật.
         """
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

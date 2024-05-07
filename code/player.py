@@ -45,7 +45,7 @@ class Player(Entity):
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()  
         self.rect = self.image.get_rect(topleft = pos)
 
-        self.hitbox = self.rect.inflate(-10,HITBOX_OFFSET['player'])
+        self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
 
         #graphics setup
         self.import_player_assets()
@@ -85,7 +85,7 @@ class Player(Entity):
         self.upgrade_cost = {'health': 100,'energy':100,'attack': 100,'magic': 100,'speed': 100}
         self.health = self.stats['health'] *0.5
         self.energy = self.stats['energy'] *0.8
-        self.exp = 5000
+        self.exp = 0
         self.speed = self.stats['speed']
 
         #damage timer
@@ -94,7 +94,7 @@ class Player(Entity):
         self.invulnerability_duration = 500
 
         #import a sound
-        self.weapon_attack_sound = pygame.mixer.Sound('../Chevalier/audio/sword.wav')
+        self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
         self.weapon_attack_sound.set_volume(0.8)
 
 
@@ -126,33 +126,33 @@ class Player(Entity):
             # Thiết lập các nút di chuyển
             keys = pygame.key.get_pressed()
             # lên, xuống    
-            if keys[pygame.K_w] or keys[pygame.K_UP]:
+            if keys[pygame.K_UP]:
                 self.direction.y = -1
                 self.status = "up"
-            elif keys[pygame.K_s]or keys[pygame.K_DOWN]:
+            elif keys[pygame.K_DOWN]:
                 self.direction.y = 1
                 self.status = "down"
             else:
                 self.direction.y = 0
             # phải trái
-            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RIGHT]:
                 self.direction.x = 1
                 self.status = "right"
-            elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
+            elif keys[pygame.K_LEFT]:
                 self.direction.x = -1
                 self.status = "left"
             else:
                 self.direction.x = 0
     
             #attack input
-            if keys[pygame.K_j]:
+            if keys[pygame.K_SPACE]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
 
                 self.weapon_attack_sound.play()
             # magic input
-            if keys[pygame.K_k]:
+            if keys[pygame.K_LCTRL]:
             
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
@@ -264,7 +264,7 @@ class Player(Entity):
     def energy_recovery(self):
         """def energy_recovery(): Hồi phục năng lượng của người chơi theo thời gian."""
         if self.energy <=self.stats['energy']:
-            self.energy += 0.02 * self.stats['magic']
+            self.energy += 0.05 * self.stats['magic']
         else:
             self.energy = self.stats['energy']
     def get_full_magic_damage(self):
