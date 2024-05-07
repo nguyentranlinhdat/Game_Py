@@ -65,5 +65,3 @@ class MagicPlayer:
                     self.animation_player.create_particles('flame',(x, y), groups)
 
 
-        
-    
