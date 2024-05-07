@@ -2,6 +2,7 @@ from csv import reader
 from os import walk
 import pygame
 
+"""các hành sử dụng cho việc đọc file csv và lấy hình ảnht ừ thư mục"""
 def import_csv_layout(path):
 	terrain_map = []
 	with open(path) as level_map:

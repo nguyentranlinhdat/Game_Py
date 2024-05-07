@@ -2,6 +2,8 @@ import pygame
 from support import import_folder
 from random import choice
 
+"""class AnimationPlayer: Load tất cả các frames animation từ các thư mục tương ứng """
+
 class AnimationPlayer:
     def __init__(self):
         self.frames = {
@@ -39,17 +41,24 @@ class AnimationPlayer:
                 self.reflect_images(import_folder('graphics/particles/leaf6'))
                 )
             }
-    
-    #sử dụng để tạo các hình ảnh phản chiếu của các frame trong danh sách frames
-    def reflect_images(self,frames):
-        #Hình ảnh phản chiếu sẽ được tạo bằng cách lật frame theo trục x (hoặc y tùy chọn).
+
+    def reflect_images(self, frames):
+        """
+        def reflect_images(): sử dụng để tạo các hình ảnh phản chiếu của các frame trong danh sách frames
+        Hình ảnh phản chiếu sẽ được tạo bằng cách lật frame theo trục x (hoặc y tùy chọn).
+        """
+
         new_frames = []
         for frame in frames:
             flipped_frame = pygame.transform.flip(frame,True,False)
             new_frames.append(flipped_frame)
-        return new_frames
 
-    def create_grass_particles(self,pos,groups):
+            return new_frames
+    def create_grass_particles(self, pos, groups):
+        """
+        def create_grass_particles(): tạo hiệu ứng hạt cỏ khi phá huỷ bụi cỏ.
+        """
+
         # Lấy khung hình hoạt ảnh từ self.frames
         animation_frames = choice(self.frames['leaf'])
         # Tạo hiệu ứng hạt cỏ
@@ -61,7 +70,9 @@ class AnimationPlayer:
 
 #Hiệu ứng hạt
 class ParticleEffect(pygame.sprite.Sprite):
-    def __init__(self,pos,animation_frames,groups):
+    """class ParticleEffect(): lớp khởi tạo hiệu ứng hạt của kỹ năng phép phóng lửa"""
+    def __init__(self, pos, animation_frames, groups):
+
         super().__init__(groups)
         self.sprite_type = 'magic'
         self.frame_index = 0
@@ -71,6 +82,10 @@ class ParticleEffect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pos)
 
     def animate(self):
+        """
+        def animate(): Thực hiện tạo hoạt ảnh cho hiệu ứng phóng lửa
+        Nếu đã đạt tới frame cuối cùng của hiệu ứng, hiệu ứng sẽ được loại bỏ.
+        """
         self.frame_index += self.animation_speed
         if self.frame_index >= len(self.frames):
             self.kill()
