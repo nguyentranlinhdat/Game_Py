@@ -42,9 +42,11 @@ class Player(Entity):
         """
         super().__init__(groups)
 
-        self.image = pygame.image.load('../Chevalier/graphics/test/player.png').convert_alpha()
+        self.image = pygame.image.load('graphics/test/player.png').convert_alpha()  
         self.rect = self.image.get_rect(topleft = pos)
+
         self.hitbox = self.rect.inflate(-10,HITBOX_OFFSET['player'])
+
         #graphics setup
         self.import_player_assets()
         self.status = 'down'
@@ -100,48 +102,57 @@ class Player(Entity):
     def import_player_assets(self):
         """def import_player_assets load tất cả hoạt ảnh đồ hoạ của nhân vật"""
         character_path = '../Chevalier/graphics/player/'
+
         self.animations = {'up': [],'down': [],'left': [],'right': [],
-          'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
-          'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
+            'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
+            'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
 
         for animation in self.animations.keys():
-          full_path = character_path + animation
-          self.animations[animation] = import_folder(full_path)
+            full_path = character_path + animation
+            self.animations[animation] = import_folder(full_path)
 
     def input(self):
         """def input()  Xử lý các sự kiện đầu vào từ bàn phím của người chơi và thực hiện các hành động tương ứng của nhân vật."""
-        #tránh nhân vật đổi hướng trong thời gian tung chiêu
+        """
+        WSAD để di chuyển
+        Q để chuyển đổi vũ khí
+        E để chuyển đổi phép
+        J để tấn công bằng vũ khí
+        K để dùng phép
+        """
+        #tránh người chơi đổi hướng trong thời gian tung chiêu
+
         if not self.attacking:
             # Thiết lập các nút di chuyển
             keys = pygame.key.get_pressed()
             # lên, xuống    
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_w] or keys[pygame.K_UP]:
                 self.direction.y = -1
                 self.status = "up"
-            elif keys[pygame.K_DOWN]:
+            elif keys[pygame.K_s]or keys[pygame.K_DOWN]:
                 self.direction.y = 1
                 self.status = "down"
             else:
                 self.direction.y = 0
             # phải trái
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                 self.direction.x = 1
                 self.status = "right"
-            elif keys[pygame.K_LEFT]:
+            elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
                 self.direction.x = -1
                 self.status = "left"
             else:
                 self.direction.x = 0
     
             #attack input
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_j]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
 
                 self.weapon_attack_sound.play()
             # magic input
-            if keys[pygame.K_LCTRL]:
+            if keys[pygame.K_k]:
             
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
@@ -231,7 +242,9 @@ class Player(Entity):
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
-    #xác định sát thương mặc định + sát thương từ vũ khí
+
+
+    # Tính sát thương đầu ra = sát thương cơ bản + sát thương từ vũ khí
     def get_full_weapon_damage(self):
         """def get_full_weapon_damage(): Tính toán xác thương gây ra bằng vũ khí
             Sát thương = lượng sát thương mặc định + sát thương từ vũ khí
@@ -261,6 +274,7 @@ class Player(Entity):
         base_damage = self.stats['magic']
         magic_damage = magic_data[self.magic]['strength']
         return base_damage + magic_damage
+
     def update(self):
         """def update(): cập nhật các trạng thái hoạt động của người chơi"""
         self.input()
