@@ -73,7 +73,7 @@ class Game:
                 self.clock.tick(FPS)
     
 
-    def run(self):
+    def run(self): 
             while True:
                 if self.state == "main_menu":
                     self.run_main_menu()
