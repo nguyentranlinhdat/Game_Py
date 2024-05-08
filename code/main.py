@@ -9,8 +9,9 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption('Chevalier')
         self.state = "main_menu"
-        self.bg = pygame.image.load("assets/Background.png")
+        self.main_menu_bg = pygame.image.load("assets/MainMenuBg.png")
         self.font = pygame.font.Font("assets/font.ttf", 100)
+        self.buttons = []
 
         self.level = Level()
         #sound main
@@ -28,7 +29,7 @@ class Game:
     #Phần giao diện đầu game
     def run_main_menu(self):
         while self.state == "main_menu":
-            self.screen.blit(self.bg, (0, 0))
+            self.screen.blit(self.main_menu_bg, (0, 0))
             menu_mouse_pos = pygame.mouse.get_pos()
             menu_text = self.font.render("CHEVALIER", True, "#b68f40")
             menu_rect = menu_text.get_rect(center=(640, 100))
