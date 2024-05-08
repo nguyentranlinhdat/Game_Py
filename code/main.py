@@ -6,14 +6,11 @@ from button import Button
 class Game:
     def __init__(self, screen):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
+        self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption('Chevalier')
         self.state = "main_menu"
         self.bg = pygame.image.load("assets/Background.png")
         self.font = pygame.font.Font("assets/font.ttf", 100)
-        self.buttons = []
-        self.clock = pygame.time.Clock()
-        self.start_ticks = pygame.time.get_ticks()
 
         self.level = Level()
         #sound main
@@ -69,21 +66,7 @@ class Game:
 
                 self.screen.fill(WATER_COLOR)
                 self.level.run()
-                # debug("hello")
-                # seconds = (pygame.time.get_ticks() - self.start_ticks) / 1000  # tính thời gian đã trôi qua
-
-                # if seconds > 60:  # nếu hơn 60 giây
-                #     minutes = seconds // 60
-                #     seconds = seconds % 60
-                # else:
-                #     minutes = 0
-
-                # time_counter = self.get_font(30).render("{:02}:{:02}".format(int(minutes), int(seconds)), True, (255, 255, 255))
-                # time_counter_rect = time_counter.get_rect(center=(WIDTH/2, 30))  # tạo một hình chữ nhật xung quanh text và đặt vị trí ở giữa phía trên màn hình
-                # self.screen.blit(time_counter, time_counter_rect) 
                 pygame.display.update() 
-
-    # def game_over_menu():
 
     def run(self): 
             while True:
@@ -94,7 +77,7 @@ class Game:
 def main():
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
-    pygame.display.set_mode((WIDTH,HEIGTH))
+    pygame.display.set_mode((WIDTH,HEIGHT))
     menu = Game(screen)
     menu.add_button(pygame.image.load("assets/Play Rect.png"), (640, 350), "PLAY", 75, "#d7fcd4", "White")
     menu.add_button(pygame.image.load("assets/Quit Rect.png"), (640, 500), "QUIT", 75, "#d7fcd4", "White")

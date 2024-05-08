@@ -101,7 +101,7 @@ class Player(Entity):
     #hoạt ảnh nhân vật khi tương tác phím 
     def import_player_assets(self):
         """def import_player_assets load tất cả hoạt ảnh đồ hoạ của nhân vật"""
-        character_path = '../Chevalier/graphics/player/'
+        character_path = 'graphics/player/'
 
         self.animations = {'up': [],'down': [],'left': [],'right': [],
             'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],

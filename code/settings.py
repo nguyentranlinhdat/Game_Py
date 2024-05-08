@@ -2,7 +2,7 @@
 """Modun này chứa các chỉ số cần thiết của game bao gồm UI, dữ liệu của vũ khí, phép thuật, quái vật"""
 """chỉ số UI - chứa các chỉ số UI cần thiết cho các đối tượng thiết kế trong game ví dụ: như font chữ, màu sắc, chiều rộng chiều cao, """
 WIDTH    = 1280	
-HEIGTH   = 720
+HEIGHT   = 720
 FPS      = 60
 TILESIZE = 64
 
@@ -39,11 +39,11 @@ UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
 
 """weapons - dữ liệu của các loại vũ khí bao gồm chỉ số cooldown, damage và địa chỉ chứa ảnh của vũ khí."""
 weapon_data = {
-	'sword': {'cooldown': 100, 'damage': 15,'graphic':'../Chevalier/graphics/weapons/sword/full.png'},
-	'lance': {'cooldown': 400, 'damage': 30,'graphic':'../Chevalier/graphics/weapons/lance/full.png'},
-	'axe': {'cooldown': 300, 'damage': 20, 'graphic':'../Chevalier/graphics/weapons/axe/full.png'},
-	'rapier':{'cooldown': 50, 'damage': 8, 'graphic':'../Chevalier/graphics/weapons/rapier/full.png'},
-	'sai':{'cooldown': 80, 'damage': 10, 'graphic':'../Chevalier/graphics/weapons/sai/full.png'}}
+	'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'},
+	'lance': {'cooldown': 400, 'damage': 30,'graphic':'graphics/weapons/lance/full.png'},
+	'axe': {'cooldown': 300, 'damage': 20, 'graphic':'graphics/weapons/axe/full.png'},
+	'rapier':{'cooldown': 50, 'damage': 8, 'graphic':'graphics/weapons/rapier/full.png'},
+	'sai':{'cooldown': 80, 'damage': 10, 'graphic':'graphics/weapons/sai/full.png'}}
 
 """magic - dữ liệu của các loại phép thuật bao gồm chỉ số strength, cost và địa chỉ chứa ảnh của phép thuật."""
 
